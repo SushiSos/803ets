@@ -1,32 +1,71 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>803ETS - E听说答案分享站</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>803ETS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f7fa;}
+.head{padding:25px;text-align:center;background:#2c7be5;color:#fff;}
+#s{width:85%;padding:10px;border-radius:20px;border:0;margin-top:15px;}
+.box{max-width:1200px;margin:20px auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;padding:0 15px;}
+.card{background:#fff;border-radius:10px;overflow:hidden;}
+.card img{width:100%;height:200px;object-fit:cover;cursor:pointer;}
+.txt{padding:12px;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:999;}
+.modal.show{display:flex;}
+.modal img{max-width:90%;max-height:90vh;}
+.close{position:absolute;top:20px;right:30px;color:#fff;font-size:30px;cursor:pointer;}
+</style>
 </head>
 <body>
-    <header class="header">
-        <h1>803ETS E听说答案</h1>
-        <p>高清图片版答案免费分享</p>
-        <input type="text" id="search" placeholder="搜索关键词">
-    </header>
-
-    <main class="container" id="answerList">
-        <!-- 答案卡片自动渲染 -->
-    </main>
-
-    <footer class="footer">
-        <p>仅供学习参考 | 803ets 开源项目</p>
-    </footer>
-
-    <script src="script.js"></script>
-    
-<!-- 图片放大弹窗 -->
-<div class="img-modal" id="imgModal">
-    <span class="close" id="closeModal">×</span>
-    <img src="" alt="放大图片" id="modalImg">
+<div class="head">
+<h2>803ETS E听说答案</h2>
+<input id="s" placeholder="搜索答案">
 </div>
+<div class="box" id="list"></div>
+
+<div class="modal" id="m">
+<span class="close" onclick="m.close()">×</span>
+<img id="bigimg">
+</div>
+
+<script>
+// 这里只改 标题、标签、图片名！！
+let data = [
+    {name:"第11周周末听说套题练习",tip:"第11周",pic:"images/Image 5-16-2026 2012.png"}
+];
+let list=document.getElementById("list");
+let m=document.getElementById("m");
+let bigimg=document.getElementById("bigimg");
+
+function show(arr){
+    list.innerHTML=""
+    arr.forEach(v=>{
+        list.innerHTML+=`
+        <div class="card">
+            <img src="${v.pic}" onclick="openimg('${v.pic}')">
+            <div class="txt">
+                <h4>${v.name}</h4>
+                <p>${v.tip}</p>
+            </div>
+        </div>
+        `
+    })
+}
+function openimg(url){
+    bigimg.src=url
+    m.classList.add("show")
+    document.body.style.overflow="hidden"
+}
+m.onclick=e=>{if(e.target===m){m.classList.remove("show");document.body.style.overflow=""}}
+show(data)
+document.getElementById("s").oninput=e=>{
+    let k=e.target.value
+    let res=data.filter(x=>x.name.includes(k)||x.tip.includes(k))
+    show(res)
+}
+</script>
 </body>
 </html>
