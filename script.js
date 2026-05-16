@@ -3,7 +3,7 @@ const answerData = [
     {
         title: "第11周周末听说套题练习",
         tag: "第11周",
-        img: "images/Image 5-16-2026 2012.png.jpg"
+        img: "images/Image 5-16-2026 2012.png"
     }
 ];
 
