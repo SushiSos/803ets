@@ -35,8 +35,3 @@ document.getElementById("search").addEventListener("input", e=>{
     )
     renderList(filter);
 })
-<!-- 图片放大弹窗 -->
-<div class="img-modal" id="imgModal">
-    <span class="close" id="closeModal">×</span>
-    <img src="" alt="放大图片" id="modalImg">
-</div>
