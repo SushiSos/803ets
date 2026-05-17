@@ -17,6 +17,19 @@ body{background:#f5f7fa;}
 .modal.show{display:flex;}
 .modal img{max-width:90%;max-height:90vh;}
 .close{position:absolute;top:20px;right:30px;color:#fff;font-size:30px;cursor:pointer;}
+/* 新增下载按钮样式 */
+.downBtn{
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    padding: 10px 20px;
+    background: #2c7be5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -29,6 +42,8 @@ body{background:#f5f7fa;}
 <div class="modal" id="m">
 <span class="close" onclick="m.close()">×</span>
 <img id="bigimg">
+<!-- 下载按钮 -->
+<button class="downBtn" onclick="downloadImg()">下载图片</button>
 </div>
 
 <script>
@@ -39,6 +54,7 @@ let data = [
 let list=document.getElementById("list");
 let m=document.getElementById("m");
 let bigimg=document.getElementById("bigimg");
+let nowImgUrl = "";
 
 function show(arr){
     list.innerHTML=""
@@ -54,10 +70,21 @@ function show(arr){
         `
     })
 }
+// 打开大图并记录图片地址
 function openimg(url){
+    nowImgUrl = url;
     bigimg.src=url
     m.classList.add("show")
     document.body.style.overflow="hidden"
+}
+// 图片下载功能
+function downloadImg(){
+    let a = document.createElement('a');
+    a.href = nowImgUrl;
+    a.download = "E听说答案图片";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 m.onclick=e=>{if(e.target===m){m.classList.remove("show");document.body.style.overflow=""}}
 show(data)
