@@ -1,157 +1,118 @@
-<meta charset="UTF-8<meta name="viewport" content="width=device-width, initial-scale=1.多功能
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Microsoft Yahei", system-ui, sans-serif;
-}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>练习资料汇总</title>
+  <style>
+    /* ===================== 全局变量（统一在这里修改样式） ===================== */
+    :root {
+      /* 主色调 */
+      --main-color: #3498db;
+      /* 页面背景色 */
+      --page-bg: #f5f7fa;
+      /* 卡片背景色 */
+      --card-bg: #ffffff;
+      /* 标题文字颜色 */
+      --title-color: #2c3e50;
+      /* 卡片描述文字颜色 */
+      --desc-color: #666666;
+      /* 卡片圆角大小 */
+      --card-radius: 12px;
+      /* 卡片阴影 */
+      --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      /* 卡片hover上浮效果 */
+      --hover-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    }
 
-body {
-  background-color: #f5f7fa;
-  padding: 40px 20px;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Microsoft Yahei", sans-serif;
+    }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-}
+    body {
+      background-color: var(--page-bg);
+      padding: 30px 15px;
+    }
 
-h1 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 40px;
-  font-size: 24px;
-}
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-/* ========== 万能卡片系统【无需修改】 ========== */
-.card-box {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
+    h1 {
+      text-align: center;
+      color: var(--title-color);
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
 
-.card {
-  background: #ffffff;
-  padding: 26px;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
+    /* 卡片容器，以后所有卡片都放这里，自动排版 */
+    .card-group {
+      display: grid;
+      gap: 20px;
+    }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-}
+    /* 卡片通用样式（无需重复修改） */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: 0.25s;
+    }
 
-.card-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #2980b9;
-  margin-bottom: 8px;
-}
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--hover-shadow);
+    }
 
-.card-desc {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.6;
-}
-/* ========================================== */
+    .card-title {
+      font-size: 18px;
+      color: var(--main-color);
+      margin-bottom: 8px;
+    }
 
+    .card-desc {
+      color: var(--desc-color);
+      font-size: 14px;
+      line-height: 1.6;
+    }
 
-/* 图片查看下载弹窗系统【保留原有全部功能】 */
-.img-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-.img-modal img {
-  max-width: 90%;
-  max-height: 85vh;
-  border-radius: 6px;
-}
-.download-btn {
-  position: absolute;
-  right: 30px;
-  bottom: 30px;
-  padding: 10px 20px;
-  background: #2980b9;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-}
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  color: #fff;
-  font-size: 32px;
-  cursor: pointer;
-}
-</style>
+    /* ===================== 深色模式兼容（解决页面变黑问题） ===================== */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page-bg: #121212;
+        --card-bg: #1e1e1e;
+        --title-color: #e8e8e8;
+        --desc-color: #bbbbbb;
+      }
+    }
+  </style>
+</head>
 <body>
+  <div class="container">
+    <h1>练习资料汇总</h1>
 
-<div class="container">
-<h1>资料</h1>
+    <!-- 卡片组：所有卡片都写在这里 -->
+    <div class="card-group">
+      <!-- 卡片模板，以后新增卡片直接复制整段修改 -->
+      <div class="card" onclick="location.href='web/answer13.html'">
+        <div class="card-title">第13周周末听说套题答案</div>
+        <div class="card-desc">包含听选信息、回答问题、信息转述完整答案，可查看详情</div>
+      </div>
 
-<!-- 卡片容器：所有卡片都放这里，自动排列 -->
-  <div class="card-box"><!-- 已有卡片：听说答案汇总 -->
-<div class="card" onclick="openLink('web/answer13.html')">
-     <div class="card-title">第13周听说</div><div class="card-desc">查看英语听说完整答案，包含听选、问答、信息转述</div>
-    <!-- ========== 以后所有新卡片在这里复制添加 ========== --><!-- 示例模板，直接复制使用
-   <div class="card" onclick="openLink('新页面.html')">
-     <div class="card-title</div><div class="card-desc">自定义描述</div>
+      <!-- 示例：以后你新增卡片，复制下面这段修改即可
+      <div class="card" onclick="location.href='你的文件名.html'">
+        <div class="card-title">这里写标题</div>
+        <div class="card-desc">这里写描述文字</div>
+      </div>
+      -->
     </div>
-    -->
-
   </div>
-<!-- 图片<div class="img-modal" id="imgModal">
- <span class="close-btn" onclick="closeModal()"></span>
- <img id="modalImg" src="" alt="">
-<button class="download-btn" id="downloadBtn</button><script>
-// 统一跳转函数（以后所有卡片共用，整洁规范）
-function openLink(url){
-  window.location.href = url;
-}
+</body>
+</html>
 
-// 图片查看下载功能
-const modal = document.getElementById('imgModal');
-const modalImg = document.getElementById('modalImg');
-const downloadBtn = document.getElementById('downloadBtn');
-let currentSrc = '';
-
-document.querySelectorAll('img').forEach(img => {
-  img.onclick = function() {
-    currentSrc = this.src;
-    modalImg.src = currentSrc;
-    modal.style.display = 'flex';
-  }
-});
-
-function closeModal() {
-  modal.style.display = 'none';
-}
-
-downloadBtn.onclick = function() {
-  const a = document.createElement('a');
-  a.href = currentSrc;
-  a.download = '图片';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-modal.onclick = function(e) {
-  if (e.target === modal) closeModal();
-}
-</body></html>
