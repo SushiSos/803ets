@@ -1,39 +1,149 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>图片查看与答案汇总</title>
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:system-ui, sans-serif;
-}
-body{
-  background:#f5f7fa;
-  padding:30px 15px;
-}
-.container{
-  max-width:800px;
-  margin:0 auto;
-}
-h1{
-  text-align:center;
-  color:#2c3e50;
-  margin-bottom:30px;
-  font-size:22px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第13周周末听说套题答案汇总</title>
+    <style>
+        body {
+            font-family: "Microsoft Yahei", sans-serif;
+            padding: 30px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 22px;
+        }
+        .question-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        .q-label {
+            font-weight: bold;
+            color: #3498db;
+            display: inline-block;
+            min-width: 40px;
+        }
 
-/* 卡片样式 */
-.card{
-  background:#fff;
-  border-radius:12px;
-  padding:24px;
-  box-shadow:0 2px 12px rgba(0,0,0,0.08);
-  cursor:pointer;
-  transition:0.25s;
+        /* 图片放大查看弹窗样式 */
+        .img-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .img-modal img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 6px;
+        }
+        .download-btn {
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+            padding: 10px 18px;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>第13周周末听说套题答案汇总</h1>
+        <div class="answer-list">
+            <div class="question-item"><span class="q-label">Q1:</span> India.</div>
+            <div class="question-item"><span class="q-label">Q2:</span> Food.</div>
+            <div class="question-item"><span class="q-label">Q3:</span> At 6:10.</div>
+            <div class="question-item"><span class="q-label">Q4:</span> Some tea.</div>
+            <div class="question-item"><span class="q-label">Q5:</span> A T‑shirt and jeans.</div>
+            <div class="question-item"><span class="q-label">Q6:</span> With a warm hug.</div>
+            <div class="question-item"><span class="q-label">Q7:</span> To France.</div>
+            <div class="question-item"><span class="q-label">Q8:</span> At seven p.m.</div>
+            <div class="question-item"><span class="q-label">Q9:</span> Surprised.</div>
+            <div class="question-item"><span class="q-label">Q10:</span> He opened it right away.</div>
+            <div class="question-item"><span class="q-label">Q11:</span> Our school will hold a special class next Tuesday afternoon. The class will take place in Room 302. Its purpose is to help you behave correctly when meeting people from other countries. At the beginning, you will watch a video about common cultural mistakes. Then, you will work in groups to practise greeting people from different countries. At the end of the class, there will be a fun game to test your knowledge.</div>
+            <div class="question-item"><span class="q-label">Q12:</span> How long will the class last?</div>
+            <div class="question-item"><span class="q-label">Q13:</span> What can we do to prepare for the class?</div>
+        </div>
+    </div>
+
+    <!-- 图片查看弹窗 -->
+    <div class="img-modal" id="imgModal">
+        <span class="close-btn" onclick="closeModal()">×</span>
+        <img id="modalImg" src="" alt="">
+        <button class="download-btn" id="downloadBtn">下载图片</button>
+    </div>
+
+    <script>
+        const modal = document.getElementById('imgModal');
+        const modalImg = document.getElementById('modalImg');
+        const downloadBtn = document.getElementById('downloadBtn');
+        let currentSrc = '';
+
+        // 给页面所有图片绑定点击放大事件
+        document.querySelectorAll('img').forEach(img => {
+            img.onclick = function() {
+                currentSrc = this.src;
+                modalImg.src = currentSrc;
+                modal.style.display = 'flex';
+            }
+        });
+
+        // 关闭弹窗
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // 下载图片
+        downloadBtn.onclick = function() {
+            const a = document.createElement('a');
+            a.href = currentSrc;
+            a.download = '图片';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // 点击空白区域关闭
+        modal.onclick = function(e) {
+            if (e.target === modal) closeModal();
+        }
+    </script>
+</body>
+</html>
   margin-bottom:30px;
 }
 .card:hover{
