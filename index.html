@@ -1,99 +1,157 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>803ETS</title>
+<meta charset="UTF-8<meta name="viewport" content="width=device-width, initial-scale=1.多功能
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#f5f7fa;}
-.head{padding:25px;text-align:center;background:#2c7be5;color:#fff;}
-#s{width:85%;padding:10px;border-radius:20px;border:0;margin-top:15px;}
-.box{max-width:1200px;margin:20px auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;padding:0 15px;}
-.card{background:#fff;border-radius:10px;overflow:hidden;}
-.card img{width:100%;height:200px;object-fit:cover;cursor:pointer;}
-.txt{padding:12px;}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:999;}
-.modal.show{display:flex;}
-.modal img{max-width:90%;max-height:90vh;}
-.close{position:absolute;top:20px;right:30px;color:#fff;font-size:30px;cursor:pointer;}
-/* 新增下载按钮样式 */
-.downBtn{
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    padding: 10px 20px;
-    background: #2c7be5;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft Yahei", system-ui, sans-serif;
+}
+
+body {
+  background-color: #f5f7fa;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  font-size: 24px;
+}
+
+/* ========== 万能卡片系统【无需修改】 ========== */
+.card-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 26px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2980b9;
+  margin-bottom: 8px;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+/* ========================================== */
+
+
+/* 图片查看下载弹窗系统【保留原有全部功能】 */
+.img-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.img-modal img {
+  max-width: 90%;
+  max-height: 85vh;
+  border-radius: 6px;
+}
+.download-btn {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  padding: 10px 20px;
+  background: #2980b9;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #fff;
+  font-size: 32px;
+  cursor: pointer;
 }
 </style>
-</head>
 <body>
-<div class="head">
-<h2>803ETS E听说答案</h2>
-<input id="s" placeholder="搜索答案">
-</div>
-<div class="box" id="list"></div>
 
-<div class="modal" id="m">
-<span class="close" onclick="m.close()">×</span>
-<img id="bigimg">
-<!-- 下载按钮 -->
-<button class="downBtn" onclick="downloadImg()">下载图片</button>
-</div>
+<div class="container">
+<h1>资料</h1>
 
-<script>
-// 这里只改 标题、标签、图片名！！
-let data = [
-    {name:"第11周周末听说套题练习",tip:"第11周",pic:"images/Image 5-16-2026 2012.png"},
-    {name:"第12周周末听说套题练习",tip:"第12周",pic:"images/ets.jpg"}
-];
-let list=document.getElementById("list");
-let m=document.getElementById("m");
-let bigimg=document.getElementById("bigimg");
-let nowImgUrl = "";
+<!-- 卡片容器：所有卡片都放这里，自动排列 -->
+  <div class="card-box"><!-- 已有卡片：听说答案汇总 -->
+<div class="card" onclick="openLink('web/answer13.html')">
+     <div class="card-title">第13周听说</div><div class="card-desc">查看英语听说完整答案，包含听选、问答、信息转述</div>
+    <!-- ========== 以后所有新卡片在这里复制添加 ========== --><!-- 示例模板，直接复制使用
+   <div class="card" onclick="openLink('新页面.html')">
+     <div class="card-title</div><div class="card-desc">自定义描述</div>
+    </div>
+    -->
 
-function show(arr){
-    list.innerHTML=""
-    arr.forEach(v=>{
-        list.innerHTML+=`
-        <div class="card">
-            <img src="${v.pic}" onclick="openimg('${v.pic}')">
-            <div class="txt">
-                <h4>${v.name}</h4>
-                <p>${v.tip}</p>
-            </div>
-        </div>
-        `
-    })
+  </div>
+<!-- 图片<div class="img-modal" id="imgModal">
+ <span class="close-btn" onclick="closeModal()"></span>
+ <img id="modalImg" src="" alt="">
+<button class="download-btn" id="downloadBtn</button><script>
+// 统一跳转函数（以后所有卡片共用，整洁规范）
+function openLink(url){
+  window.location.href = url;
 }
-// 打开大图并记录图片地址
-function openimg(url){
-    nowImgUrl = url;
-    bigimg.src=url
-    m.classList.add("show")
-    document.body.style.overflow="hidden"
+
+// 图片查看下载功能
+const modal = document.getElementById('imgModal');
+const modalImg = document.getElementById('modalImg');
+const downloadBtn = document.getElementById('downloadBtn');
+let currentSrc = '';
+
+document.querySelectorAll('img').forEach(img => {
+  img.onclick = function() {
+    currentSrc = this.src;
+    modalImg.src = currentSrc;
+    modal.style.display = 'flex';
+  }
+});
+
+function closeModal() {
+  modal.style.display = 'none';
 }
-// 图片下载功能
-function downloadImg(){
-    let a = document.createElement('a');
-    a.href = nowImgUrl;
-    a.download = "E听说答案图片";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+
+downloadBtn.onclick = function() {
+  const a = document.createElement('a');
+  a.href = currentSrc;
+  a.download = '图片';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
-m.onclick=e=>{if(e.target===m){m.classList.remove("show");document.body.style.overflow=""}}
-show(data)
-document.getElementById("s").oninput=e=>{
-    let k=e.target.value
-    let res=data.filter(x=>x.name.includes(k)||x.tip.includes(k))
-    show(res)
+
+modal.onclick = function(e) {
+  if (e.target === modal) closeModal();
 }
-</script>
-</body>
-</html>
+</body></html>
