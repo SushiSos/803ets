@@ -11,14 +11,116 @@
             box-sizing: border-box;
         }
         body {
-            /* 替换为苹方字体，兼容Windows、Android fallback */
             font-family: "PingFang SC", "苹方", "Microsoft Yahei", sans-serif;
             padding: 30px 15px;
             background: linear-gradient(135deg, #e0f7ff 0%, #f0f4ff 100%);
             min-height: 100vh;
         }
+
+        /* ========== 视频容器样式 ========== */
+        .video-wrapper {
+            max-width: 800px;
+            margin: 0 auto 22px auto;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #1a1a2e;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18),
+                0 0 18px rgba(100, 180, 255, 0.25);
+            border: 1px solid rgba(100, 180, 255, 0.4);
+            transition: box-shadow 0.5s ease, border-color 0.5s ease;
+            animation: videoBreathe 5s ease-in-out infinite;
+        }
+
+        @keyframes videoBreathe {
+            0% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18),
+                    0 0 18px rgba(100, 180, 255, 0.25);
+                border-color: rgba(100, 180, 255, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18),
+                    0 0 30px rgba(120, 140, 255, 0.5);
+                border-color: rgba(130, 150, 255, 0.65);
+            }
+            100% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18),
+                    0 0 18px rgba(100, 180, 255, 0.25);
+                border-color: rgba(100, 180, 255, 0.4);
+            }
+        }
+
+        .video-wrapper video {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: contain;
+            background: #1a1a2e;
+        }
+
+        /* 静音按钮 - 玻璃态浮动按钮 */
+        .mute-btn {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 21px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            z-index: 10;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .mute-btn:hover {
+            background: rgba(0, 0, 0, 0.65);
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .mute-btn:active {
+            transform: scale(0.9);
+            transition: all 0.15s ease;
+            background: rgba(0, 0, 0, 0.75);
+        }
+
+        /* 脉冲提示动画（静音状态下按钮微微呼吸，提示可点击） */
+        .mute-btn.is-muted {
+            animation: mutePulse 2.4s ease-in-out infinite;
+        }
+
+        @keyframes mutePulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.25);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* ========== 返回按钮样式 ========== */
         .back-box {
             margin-bottom: 20px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .back-btn {
             display: inline-block;
@@ -40,21 +142,21 @@
             box-shadow: 0 0 15px rgba(100, 180, 255, 0.4);
         }
 
-        /* 呼吸灯动画 */
+        /* ========== 主内容区呼吸灯动画 ========== */
         @keyframes breathe {
             0% {
                 box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15),
-                            0 0 15px rgba(100, 180, 255, 0.3);
+                    0 0 15px rgba(100, 180, 255, 0.3);
                 border-color: rgba(100, 180, 255, 0.5);
             }
             50% {
                 box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15),
-                            0 0 25px rgba(120, 120, 255, 0.5);
+                    0 0 25px rgba(120, 120, 255, 0.5);
                 border-color: rgba(120, 120, 255, 0.7);
             }
             100% {
                 box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15),
-                            0 0 15px rgba(100, 180, 255, 0.3);
+                    0 0 15px rgba(100, 180, 255, 0.3);
                 border-color: rgba(100, 180, 255, 0.5);
             }
         }
@@ -100,9 +202,79 @@
             color: #2980b9;
             white-space: nowrap;
         }
+
+        /* ========== 移动端适配 ========== */
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 10px;
+            }
+            .video-wrapper {
+                border-radius: 14px;
+                margin-bottom: 16px;
+            }
+            .mute-btn {
+                bottom: 10px;
+                right: 10px;
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+            .container {
+                padding: 22px 14px;
+                border-radius: 14px;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 24px;
+            }
+            .question-item {
+                font-size: 14px;
+                padding: 10px 12px;
+                gap: 6px;
+            }
+            .back-btn {
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .mute-btn {
+                bottom: 8px;
+                right: 8px;
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
+            }
+            .question-item {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- ==================== 视频区域 ==================== -->
+    <div class="video-wrapper">
+        <video id="myVideo"
+               src="your-video.mp4"
+               autoplay
+               muted
+               loop
+               playsinline
+               preload="auto"
+               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect fill='%231a1a2e' width='800' height='450'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='rgba(255,255,255,0.35)' font-size='20' font-family='sans-serif'%3E🎬 视频加载中...%3C/text%3E%3C/svg%3E">
+            您的浏览器不支持视频播放，请升级浏览器。
+        </video>
+        <!-- 静音切换按钮 -->
+        <button class="mute-btn is-muted"
+                id="muteBtn"
+                title="取消静音"
+                aria-label="取消静音">🔇</button>
+    </div>
+    <!-- ==================== 视频区域结束 ==================== -->
+
     <div class="back-box">
         <a href="../index.html" class="back-btn">← 返回首页</a>
     </div>
@@ -125,5 +297,51 @@
             <div class="question-item"><span class="q-label">Q13:</span> Where are you going to meet tomorrow morning?</div>
         </div>
     </div>
+
+    <!-- ==================== 静音按钮交互脚本 ==================== -->
+    <script>
+        (function() {
+            const video = document.getElementById('myVideo');
+            const muteBtn = document.getElementById('muteBtn');
+
+            if (!video || !muteBtn) return;
+
+            // 更新按钮状态
+            function updateMuteUI() {
+                if (video.muted) {
+                    muteBtn.textContent = '🔇';
+                    muteBtn.setAttribute('title', '取消静音');
+                    muteBtn.setAttribute('aria-label', '取消静音');
+                    muteBtn.classList.add('is-muted');
+                } else {
+                    muteBtn.textContent = '🔊';
+                    muteBtn.setAttribute('title', '静音');
+                    muteBtn.setAttribute('aria-label', '静音');
+                    muteBtn.classList.remove('is-muted');
+                }
+            }
+
+            // 点击切换静音
+            muteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                video.muted = !video.muted;
+                updateMuteUI();
+
+                // 如果取消静音后视频暂停了（某些浏览器策略），尝试恢复播放
+                if (!video.muted && video.paused) {
+                    video.play().catch(function() {
+                        // 如果播放失败，可能被浏览器阻止，静音恢复
+                        // 不做额外处理，用户可手动操作
+                    });
+                }
+            });
+
+            // 监听视频自身的音量变化（例如用户通过其他方式修改）
+            video.addEventListener('volumechange', updateMuteUI);
+
+            // 初始状态同步
+            updateMuteUI();
+        })();
+    </script>
 </body>
 </html>
