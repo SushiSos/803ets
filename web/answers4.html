@@ -1,0 +1,346 @@
+这是为您生成的一个可直接运行的HTML文档，它是一份包含背景视频和毛玻璃效果答案展示的暑假作业模拟试题页面。
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暑假第4周作业-(新)8年级下模拟试题5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "苹方", "Microsoft Yahei", sans-serif;
+            padding: 30px 15px;
+            background: linear-gradient(135deg, #e0f7ff 0%, #f0f4ff 100%);
+            min-height: 100vh;
+        }
+
+        /* ========== 视频容器 ========== */
+        .video-wrapper {
+            max-width: 800px;
+            margin: 0 auto 22px auto;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #1a1a2e;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18),
+                0 0 18px rgba(100, 180, 255, 0.25);
+            border: 1px solid rgba(100, 180, 255, 0.4);
+            animation: videoBreathe 5s ease-in-out infinite;
+        }
+        @keyframes videoBreathe {
+            0% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18), 0 0 18px rgba(100, 180, 255, 0.25);
+                border-color: rgba(100, 180, 255, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18), 0 0 30px rgba(120, 140, 255, 0.5);
+                border-color: rgba(130, 150, 255, 0.65);
+            }
+            100% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18), 0 0 18px rgba(100, 180, 255, 0.25);
+                border-color: rgba(100, 180, 255, 0.4);
+            }
+        }
+        .video-wrapper video {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: fill;
+            background: #1a1a2e;
+        }
+
+        /* ========== 静音按钮 + 提示气泡 ========== */
+        .mute-btn {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 21px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            z-index: 10;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        .mute-btn:hover {
+            background: rgba(0, 0, 0, 0.65);
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        .mute-btn:active {
+            transform: scale(0.9);
+            background: rgba(0, 0, 0, 0.75);
+        }
+        .tooltip {
+            position: absolute;
+            bottom: 54px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            white-space: nowrap;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 18px;
+            border: 6px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+            border-bottom: 0;
+        }
+        .tooltip.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* ========== 返回按钮 ========== */
+        .back-box {
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(100, 180, 255, 0.4);
+            border-radius: 10px;
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(100, 180, 255, 0.2);
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(100, 180, 255, 0.4);
+        }
+
+        /* ========== 主内容区 ========== */
+        @keyframes breathe {
+            0% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15), 0 0 15px rgba(100, 180, 255, 0.3);
+                border-color: rgba(100, 180, 255, 0.5);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15), 0 0 25px rgba(120, 120, 255, 0.5);
+                border-color: rgba(120, 120, 255, 0.7);
+            }
+            100% {
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15), 0 0 15px rgba(100, 180, 255, 0.3);
+                border-color: rgba(100, 180, 255, 0.5);
+            }
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(100, 180, 255, 0.5);
+            padding: 35px;
+            border-radius: 20px;
+            animation: breathe 4s ease-in-out infinite;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 35px;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .question-item {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(100, 180, 255, 0.2);
+            font-size: 16px;
+            line-height: 1.7;
+            display: flex;
+            gap: 10px;
+            transition: background 0.3s, box-shadow 0.3s;
+            border-radius: 12px;
+        }
+        .question-item:hover {
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 0 10px rgba(100, 180, 255, 0.3);
+        }
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        .q-label {
+            font-weight: bold;
+            color: #2980b9;
+            white-space: nowrap;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 10px;
+            }
+            .video-wrapper {
+                border-radius: 14px;
+                margin-bottom: 16px;
+            }
+            .mute-btn {
+                bottom: 10px;
+                right: 10px;
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+            .tooltip {
+                bottom: 46px;
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+            .container {
+                padding: 22px 14px;
+                border-radius: 14px;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 24px;
+            }
+            .question-item {
+                font-size: 14px;
+                padding: 10px 12px;
+                gap: 6px;
+            }
+            .back-btn {
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 视频区域 ==================== -->
+    <div class="video-wrapper">
+        <video id="myVideo"
+               src="../video/video.mp4"
+               autoplay
+               muted
+               loop
+               playsinline
+               preload="auto"
+               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect fill='%231a1a2e' width='800' height='450'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='rgba(255,255,255,0.35)' font-size='20' font-family='sans-serif'%3E🎬 视频加载中...%3C/text%3E%3C/svg%3E">
+            您的浏览器不支持视频播放。
+        </video>
+
+        <!-- 静音按钮（含提示气泡） -->
+        <button class="mute-btn is-muted" id="muteBtn" title="开启声音" aria-label="开启声音">
+            <span class="mute-icon">🔇</span>
+            <span class="tooltip" id="soundTip">点击开启声音</span>
+        </button>
+    </div>
+    <!-- ==================== 视频区域结束 ==================== -->
+
+    <div class="back-box">
+        <a href="../index.html" class="back-btn">← 返回首页</a>
+    </div>
+
+    <div class="container">
+        <h1>暑假第4周作业-(新)8年级下模拟试题5</h1>
+        <div class="answer-list">
+            <div class="question-item"><span class="q-label">Q1:</span> At the nursing home.</div>
+            <div class="question-item"><span class="q-label">Q2:</span> For two years.</div>
+            <div class="question-item"><span class="q-label">Q3:</span> There was a rainstorm.</div>
+            <div class="question-item"><span class="q-label">Q4:</span> Kathy's family and her neighbours.</div>
+            <div class="question-item"><span class="q-label">Q5:</span> A girl who lost her way.</div>
+            <div class="question-item"><span class="q-label">Q6:</span> A rabbit.</div>
+            <div class="question-item"><span class="q-label">Q7:</span> About nine million square kilometres.</div>
+            <div class="question-item"><span class="q-label">Q8:</span> The largest hot desert in the world.</div>
+            <div class="question-item"><span class="q-label">Q9:</span> In a few areas with water.</div>
+            <div class="question-item"><span class="q-label">Q10:</span> Because of climate change.</div>
+            <div class="question-item"><span class="q-label">Q11:</span> Anna is a student in Grade 9. In the evening, she has to practise playing the piano. She often goes to bed after 11:00. She doesn't get enough sleep every night. Besides this, her parents always compare her with her cousin. She feels tired and sad at home.</div>
+            <div class="question-item"><span class="q-label">Q12:</span> What time do you get up every morning?</div>
+            <div class="question-item"><span class="q-label">Q13:</span> Are you busy on the weekend too?</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const video = document.getElementById('myVideo');
+            const muteBtn = document.getElementById('muteBtn');
+            const muteIcon = document.querySelector('.mute-icon');
+            const soundTip = document.getElementById('soundTip');
+
+            if (!video || !muteBtn || !muteIcon) return;
+
+            // 更新按钮状态（图标、提示）
+            function updateMuteUI() {
+                if (video.muted) {
+                    muteIcon.textContent = '🔇';
+                    muteBtn.setAttribute('title', '开启声音');
+                    muteBtn.setAttribute('aria-label', '开启声音');
+                    muteBtn.classList.add('is-muted');
+                } else {
+                    muteIcon.textContent = '🔊';
+                    muteBtn.setAttribute('title', '静音');
+                    muteBtn.setAttribute('aria-label', '静音');
+                    muteBtn.classList.remove('is-muted');
+                }
+            }
+
+            // 点击静音按钮：切换静音，同时隐藏提示气泡
+            muteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                video.muted = !video.muted;
+                updateMuteUI();
+
+                // 隐藏"点击开启声音"提示（只隐藏一次）
+                if (soundTip && !soundTip.classList.contains('hidden')) {
+                    soundTip.classList.add('hidden');
+                }
+
+                // 如果取消静音后视频暂停，尝试恢复播放
+                if (!video.muted && video.paused) {
+                    video.play().catch(() => {});
+                }
+            });
+
+            // 监听音量变化（如通过浏览器控制台修改）
+            video.addEventListener('volumechange', updateMuteUI);
+
+            // 初始同步
+            updateMuteUI();
+        })();
+    </script>
+</body>
+</html>
