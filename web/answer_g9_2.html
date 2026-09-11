@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>第2周周末听说套题答案汇总</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* 关闭全局点击时的蓝色高亮块 */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-top: #8fc2f2;
+            --bg-mid: #b9d8f6;
+            --bg-bottom: #e2f0fc;
+            --text-main: #17212b;
+            /* 弹力 0.3：平滑无过冲 */
+            --spring: cubic-bezier(0.34, 0.3, 0.64, 1);
+        }
+
+        body {
+            font-family: "PingFang SC", "苹方", "Microsoft Yahei", sans-serif;
+            min-height: 100vh;
+            padding: 48px 18px 60px;
+            color: var(--text-main);
+            background:
+                radial-gradient(ellipse 60% 40% at 15% 10%, rgba(120, 240, 210, 0.75), transparent 70%),
+                radial-gradient(ellipse 50% 45% at 85% 90%, rgba(110, 190, 250, 0.8), transparent 70%),
+                radial-gradient(ellipse 40% 30% at 80% 15%, rgba(255, 230, 160, 0.55), transparent 70%),
+                linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* ===== 背景漂浮光斑 ===== */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .blob-1 {
+            width: 380px; height: 380px;
+            background: radial-gradient(circle, rgba(110, 245, 215, 0.7), transparent 70%);
+            top: 5%; left: -100px;
+            animation: blobFloat1 30s ease-in-out infinite;
+        }
+
+        .blob-2 {
+            width: 460px; height: 460px;
+            background: radial-gradient(circle, rgba(100, 185, 250, 0.65), transparent 70%);
+            bottom: -8%; right: -140px;
+            animation: blobFloat2 36s ease-in-out infinite;
+        }
+
+        .blob-3 {
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(255, 225, 160, 0.55), transparent 70%);
+            top: 30%; right: 12%;
+            animation: blobFloat3 42s ease-in-out infinite;
+        }
+
+        @keyframes blobFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%      { transform: translate(70px, 50px) scale(1.1); }
+            66%      { transform: translate(30px, 110px) scale(0.95); }
+        }
+
+        @keyframes blobFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50%      { transform: translate(-90px, -70px) scale(1.12); }
+        }
+
+        @keyframes blobFloat3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            40%      { transform: translate(-60px, 60px) scale(0.92); }
+            75%      { transform: translate(40px, -40px) scale(1.08); }
+        }
+
+        /* ==========================================================
+           入场：平滑浮现，无过冲
+           ========================================================== */
+        @keyframes springIn {
+            0%   { opacity: 0; transform: translateY(10px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .anim-in { opacity: 0; }
+
+        .anim-in.play {
+            animation: springIn 0.45s var(--spring) forwards;
+        }
+
+        /* ==========================================================
+           按压回弹：幅度极小
+           ========================================================== */
+        @keyframes squish {
+            0%   { transform: scale(1, 1); }
+            40%  { transform: scale(1.003, 0.995); }
+            100% { transform: scale(1, 1); }
+        }
+
+        .glass.squishing {
+            animation: squish 0.25s var(--spring);
+        }
+
+        /* 按住瞬间 */
+        .glass.pressed {
+            transform: scale(0.995, 0.99) !important;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* ==========================================================
+           玻璃基础样式
+           ========================================================== */
+        .glass {
+            --mx: 50%;
+            --my: 50%;
+            position: relative;
+            isolation: isolate;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(6px) saturate(160%) brightness(1.08);
+            -webkit-backdrop-filter: blur(6px) saturate(160%) brightness(1.08);
+            box-shadow:
+                inset 0 0 22px rgba(255, 255, 255, 0.7),
+                inset 0 0 6px rgba(255, 255, 255, 0.9),
+                inset 0 1.5px 0.5px rgba(255, 255, 255, 1),
+                inset 0 -10px 20px rgba(100, 150, 200, 0.18),
+                inset 2px 0 6px rgba(255, 120, 150, 0.22),
+                inset -2px 0 6px rgba(100, 200, 255, 0.25),
+                0 0 30px 6px rgba(255, 255, 255, 0.35),
+                0 14px 34px rgba(70, 110, 160, 0.22);
+            transition: transform 0.2s ease-out;
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* 边框环：鼠标跟随亮边 + 静态色散 + 呼吸 */
+        .glass::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.5px;
+            background:
+                radial-gradient(160px circle at var(--mx) var(--my),
+                    rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.15) 55%, transparent 75%),
+                conic-gradient(from 210deg,
+                    rgba(255, 130, 160, 0.55),
+                    rgba(255, 255, 255, 0.15) 22%,
+                    rgba(140, 210, 255, 0.55) 45%,
+                    rgba(255, 255, 255, 0.15) 68%,
+                    rgba(170, 255, 230, 0.5) 85%,
+                    rgba(255, 130, 160, 0.55));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 3;
+            animation: edgeBreath 8s ease-in-out infinite;
+        }
+
+        @keyframes edgeBreath {
+            0%, 100% { opacity: 0.7; }
+            50%      { opacity: 1; }
+        }
+
+        /* 鼠标跟随内部高光 */
+        .glass::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(
+                220px circle at var(--mx) var(--my),
+                rgba(255, 255, 255, 0.5),
+                rgba(255, 255, 255, 0.08) 50%,
+                transparent 70%
+            );
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glass:hover::before { opacity: 1; }
+
+        .glass:hover {
+            box-shadow:
+                inset 0 0 24px rgba(255, 255, 255, 0.78),
+                inset 0 0 6px rgba(255, 255, 255, 0.95),
+                inset 0 1.5px 0.5px rgba(255, 255, 255, 1),
+                inset 0 -10px 20px rgba(100, 150, 200, 0.2),
+                inset 2px 0 6px rgba(255, 120, 150, 0.25),
+                inset -2px 0 6px rgba(100, 200, 255, 0.28),
+                0 0 34px 7px rgba(255, 255, 255, 0.4),
+                0 18px 38px rgba(70, 110, 160, 0.25);
+        }
+
+        .glass > span,
+        .glass > h1 {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== 按钮 ===== */
+        .liquid-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 34px;
+            border-radius: 999px;
+            text-decoration: none;
+            color: #16232e;
+            font-size: 16px;
+            font-weight: 700;
+            overflow: hidden;
+            will-change: transform;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* 按钮流光扫过 */
+        .liquid-button .shine {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(
+                115deg,
+                transparent 20%,
+                rgba(255, 255, 255, 0.35) 42%,
+                rgba(255, 255, 255, 0.65) 50%,
+                rgba(255, 255, 255, 0.35) 58%,
+                transparent 80%
+            );
+            transform: translateX(-120%);
+            animation: shineSweep 5s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes shineSweep {
+            0%        { transform: translateX(-120%); }
+            45%, 100% { transform: translateX(120%); }
+        }
+
+        /* ===== 主容器 ===== */
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 44px 36px 32px;
+            border-radius: 36px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 36px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .answer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ===== 卡片 ===== */
+        .question-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 18px 22px;
+            border-radius: 26px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .q-label {
+            font-weight: 800;
+            font-size: 15px;
+            color: #17232d;
+            padding: 6px 14px;
+            border-radius: 999px;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px) saturate(160%);
+            box-shadow:
+                inset 0 0 10px rgba(255, 255, 255, 0.8),
+                inset 0 1px 1px rgba(255, 255, 255, 1),
+                0 0 12px 2px rgba(255, 255, 255, 0.4),
+                0 4px 10px rgba(70, 115, 165, 0.18);
+        }
+
+        /* ===== 答案文字：仅修复闪烁，无背景 ===== */
+        .question-item span:last-child {
+            word-break: break-word;
+            hyphens: auto;
+            /* 强制硬件加速，防止文字在动画时闪烁，不改变外观 */
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* 无障碍：减少动态效果 */
+        @media (prefers-reduced-motion: reduce) {
+            .blob, .glass::after, .liquid-button .shine,
+            .anim-in, .anim-in.play {
+                animation: none !important;
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 28px 14px 48px; }
+            .container { padding: 34px 20px 24px; border-radius: 28px; }
+            h1 { font-size: 24px; margin-bottom: 28px; }
+            .question-item { font-size: 15px; padding: 16px 18px; }
+            .liquid-button { font-size: 15px; padding: 13px 26px; }
+            .blob { filter: blur(70px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="back-box">
+        <a href="../index.html" class="glass liquid-button anim-in" data-tilt>
+            <span class="shine"></span>
+            <span>← 返回首页</span>
+        </a>
+    </div>
+
+    <div class="container glass anim-in">
+        <h1>第2周周末听说套题答案汇总</h1>
+
+        <div class="answer-list">
+            <div class="question-item glass anim-in"><span class="q-label">Q1</span><span>Tom's grandma's friend.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q2</span><span>Every week.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q3</span><span>Quiet and beautiful.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q4</span><span>They built a highway.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q5</span><span>Because they were expensive.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q6</span><span>By sharing videos.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q7</span><span>For ten years.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q8</span><span>Narrow and dirty.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q9</span><span>By subway.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q10</span><span>Getting better and better.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q11</span><span>Anna's grandma stopped working three years ago. She often felt lonely. Now she has joined a college for old people. Every week she goes out to take pictures. Sometimes she travels to other cities.</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q12</span><span>Does your grandma keep a pet?</span></div>
+            <div class="question-item glass anim-in"><span class="q-label">Q13</span><span>Where does your grandma like to travel most?</span></div>
+        </div>
+    </div>
+
+    <script>
+        /* ============ 平滑入场 ============ */
+        document.querySelectorAll('.anim-in').forEach((el, i) => {
+            setTimeout(() => el.classList.add('play'), 60 * i + 60);
+        });
+
+        /* ============ 鼠标跟随高光 + 轻微 3D 倾斜 ============ */
+        function bindLiquidEffect(el) {
+            const tilt = el.hasAttribute('data-tilt');
+            const maxTilt = 2.5;
+
+            el.addEventListener('mousemove', (e) => {
+                if (el.classList.contains('pressed')) return;
+
+                const rect = el.getBoundingClientRect();
+                const px = ((e.clientX - rect.left) / rect.width) * 100;
+                const py = ((e.clientY - rect.top) / rect.height) * 100;
+
+                el.style.setProperty('--mx', px + '%');
+                el.style.setProperty('--my', py + '%');
+
+                if (tilt) {
+                    const rotateY = ((px - 50) / 50) * maxTilt;
+                    const rotateX = -((py - 50) / 50) * maxTilt;
+                    el.style.transform =
+                        `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+                }
+            });
+
+            el.addEventListener('mouseleave', () => {
+                if (tilt) {
+                    el.style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+                }
+            });
+        }
+
+        document.querySelectorAll('.glass').forEach(bindLiquidEffect);
+
+        /* ============ 轻量按压反馈 ============ */
+        document.querySelectorAll('.glass').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.classList.add('pressed');
+            });
+
+            el.addEventListener('mouseup', () => {
+                el.classList.remove('pressed');
+                el.classList.remove('squishing');
+                void el.offsetWidth;
+                el.classList.add('squishing');
+            });
+
+            el.addEventListener('animationend', (e) => {
+                if (e.animationName === 'squish') {
+                    el.classList.remove('squishing');
+                    el.style.transform = '';
+                }
+                if (e.animationName === 'springIn') {
+                    el.classList.remove('play', 'anim-in');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
