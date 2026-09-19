@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>803ets 最新 APK 下载器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+    color: #e6edf3; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .card {
+    width: 100%; max-width: 560px; background: #161b22;
+    border: 1px solid #30363d; border-radius: 16px; padding: 32px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  h1 { font-size: 22px; margin-bottom: 6px; }
+  .sub { color: #8b949e; font-size: 14px; margin-bottom: 24px; }
+  label { display:block; font-size:13px; color:#8b949e; margin-bottom:6px; }
+  input {
+    width: 100%; padding: 11px 14px; border-radius: 8px;
+    border: 1px solid #30363d; background: #0d1117; color:#e6edf3;
+    font-size: 14px; margin-bottom: 16px;
+  }
+  input:focus { outline: none; border-color: #58a6ff; }
+  button {
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    background: #238636; color: #fff; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background .15s;
+  }
+  button:hover { background: #2ea043; }
+  button:disabled { background:#30363d; cursor:not-allowed; }
+  .result { margin-top: 22px; }
+  .status { padding:14px 16px; border-radius:8px; font-size:14px; line-height:1.6; }
+  .status.loading { background:#1f2937; color:#8b949e; }
+  .status.error { background:#3d1d1d; color:#f85149; border:1px solid #5c2a2a; }
+  .status.empty { background:#3a2f1a; color:#d29922; border:1px solid #5c4a1f; }
+  .apk { background:#0d1117; border:1px solid #30363d; border-radius:12px; padding:18px; }
+  .apk .tag { display:inline-block; background:#1f6feb33; color:#58a6ff; border:1px solid #1f6feb; border-radius:20px; padding:2px 12px; font-size:13px; margin-bottom:12px; }
+  .apk .name { font-size:15px; font-weight:600; word-break:break-all; margin-bottom:4px; }
+  .apk .meta { color:#8b949e; font-size:13px; margin-bottom:16px; }
+  .dl { display:block; text-align:center; background:#238636; color:#fff !important; text-decoration:none; padding:12px; border-radius:8px; font-weight:600; }
+  .dl:hover { background:#2ea043; }
+  .foot { margin-top:20px; font-size:12px; color:#6e7681; text-align:center; }
+  a.lnk { color:#58a6ff; text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>APK 最新版本下载器</h1>
+    <p class="sub">通过 GitHub API 自动获取指定仓库最新 release 中的 APK</p>
+
+    <label for="repo">GitHub 仓库地址</label>
+    <input id="repo" type="text" value="https://github.com/SushiSos/803ets">
+
+    <button id="btn" onclick="fetchLatest()">获取最新版本</button>
+
+    <div class="result" id="result"></div>
+
+    <p class="foot">数据直接来自 GitHub REST API · 支持任意公开仓库</p>
+  </div>
+
+<script>
+const result = document.getElementById('result');
+const btn = document.getElementById('btn');
+
+function parseRepo(input) {
+  input = input.trim();
+  let m = input.match(/github\.com\/([^\/]+)\/([^\/#?]+)/);
+  if (m) return { owner: m[1], repo: m[2].replace(/\.git$/, '') };
+  let parts = input.split('/');
+  if (parts.length === 2) return { owner: parts[0], repo: parts[1] };
+  return null;
+}
+
+function fmtSize(b) {
+  if (b == null) return '';
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+async function fetchLatest() {
+  result.innerHTML = '<div class="status loading">正在从 GitHub 获取 release 信息…</div>';
+  btn.disabled = true;
+  const info = parseRepo(document.getElementById('repo').value);
+  if (!info) {
+    result.innerHTML = '<div class="status error">仓库地址格式无法识别，请使用形如 github.com/owner/repo 的地址。</div>';
+    btn.disabled = false; return;
+  }
+  try {
+    const url = `https://api.github.com/repos/${info.owner}/${info.repo}/releases`;
+    const resp = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
+    if (resp.status === 404) {
+      result.innerHTML = `<div class="status error">未找到仓库 ${info.owner}/${info.repo}，请检查地址是否正确。</div>`;
+      btn.disabled = false; return;
+    }
+    if (resp.status === 403) {
+      result.innerHTML = '<div class="status error">触发了 GitHub API 访问频率限制（匿名每小时 60 次）。请稍后再试。</div>';
+      btn.disabled = false; return;
+    }
+    if (!resp.ok) {
+      result.innerHTML = `<div class="status error">请求失败，HTTP ${resp.status}</div>`;
+      btn.disabled = false; return;
+    }
+    const releases = await resp.json();
+    if (!Array.isArray(releases) || releases.length === 0) {
+      result.innerHTML = `<div class="status empty">该仓库目前<b>尚未发布任何 release</b>，暂无 APK 可供下载。<br><a class="lnk" target="_blank" href="https://github.com/${info.owner}/${info.repo}/releases">前往仓库查看</a></div>`;
+      btn.disabled = false; return;
+    }
+    let target = null, apk = null;
+    const sorted = releases.filter(r => !r.draft);
+    for (const r of sorted) {
+      const a = (r.assets || []).find(x => /\.apk$/i.test(x.name));
+      if (a) { target = r; apk = a; break; }
+    }
+    if (!target) {
+      result.innerHTML = `<div class="status empty">已有 release，但其中未找到 <code>.apk</code> 文件。<br><a class="lnk" target="_blank" href="https://github.com/${info.owner}/${info.repo}/releases">前往仓库查看</a></div>`;
+      btn.disabled = false; return;
+    }
+    const date = target.published_at ? target.published_at.slice(0,10) : '';
+    result.innerHTML = `
+      <div class="apk">
+        <span class="tag">${target.prerelease ? '预发布 ' : ''}${target.tag_name}</span>
+        <div class="name">${apk.name}</div>
+        <div class="meta">发布时间 ${date}${apk.size ? ' · 大小 ' + fmtSize(apk.size) : ''}</div>
+        <a class="dl" href="${apk.browser_download_url}" download="${apk.name}">下载 APK</a>
+      </div>`;
+  } catch (e) {
+    result.innerHTML = `<div class="status error">网络请求异常：${e.message}</div>`;
+  }
+  btn.disabled = false;
+}
+
+fetchLatest();
+</script>
+</body>
+</html>
