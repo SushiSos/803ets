@@ -272,4 +272,111 @@ function renderDownloadBlock(release, asset) {
       <!-- 说明面板 (默认隐藏) -->
       <div class="link-info">
         
-        <div class="info-sectio
+        <div class="info-section">
+          <div class="info-label">更新日志 (Release Notes)：</div>
+          <div class="changelog-box">${notes}</div>
+        </div>
+
+        <div class="info-section" style="border-top: 1px solid #30363d; padding-top: 12px;">
+          <div class="info-label">原始下载链接：</div>
+          <div class="link-text">${escHtml(rawUrl)}</div>
+          <button class="copy-btn" onclick="copyLink(this, '${escAttr(rawUrl)}')">复制链接</button>
+        </div>
+        
+      </div>
+
+      <div class="dl-group">
+        <a class="dl" href="${escAttr(proxyUrl)}" download="${fileName}">
+          <span class="badge">主线路</span>加速下载
+        </a>
+        <a class="dl alt" href="${escAttr(rawUrl)}" download="${fileName}">
+          <span class="badge">备用</span>原始链接下载
+        </a>
+      </div>
+      <div class="hint">主线路走 gh-proxy 加速；若无法下载，请改用备用线路原始链接。</div>
+    </div>`;
+}
+
+// 切换说明面板的显示/隐藏
+function toggleInfo(el) {
+  const apkBox = el.closest('.apk');
+  const infoPanel = apkBox.querySelector('.link-info');
+  if (infoPanel.style.display === 'block') {
+    infoPanel.style.display = 'none';
+  } else {
+    infoPanel.style.display = 'block';
+  }
+}
+
+// 复制原链接
+function copyLink(btn, url) {
+  navigator.clipboard.writeText(url).then(() => {
+    const originalText = btn.textContent;
+    btn.textContent = '✅ 已复制';
+    btn.style.color = '#3fb950';
+    btn.style.borderColor = '#3fb950';
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  }).catch(err => {
+    alert('复制失败，请长按上方链接手动复制。');
+  });
+}
+
+// 主查询区请求
+async function fetchLatest() {
+  result.innerHTML = '<div class="status loading">正在从 GitHub 获取 release 信息…</div>';
+  btn.disabled = true;
+  const info = parseRepo(document.getElementById('repo').value);
+  if (!info) {
+    result.innerHTML = '<div class="status error">仓库地址格式无法识别，请使用形如 github.com/owner/repo 的地址。</div>';
+    btn.disabled = false; return;
+  }
+  try {
+    const res = await getLatestApk(info.owner, info.repo);
+    if (!res) {
+      result.innerHTML = `<div class="status empty">该仓库没有可下载的 <code>.apk</code>（可能尚未发布 release，或 release 中没有 APK）。<br>
+        <a class="lnk" target="_blank" href="https://github.com/${info.owner}/${info.repo}/releases">前往仓库查看</a></div>`;
+      btn.disabled = false; return;
+    }
+    result.innerHTML = renderDownloadBlock(res.release, res.asset);
+  } catch (e) {
+    if (e.message === 'NOT_FOUND') {
+      result.innerHTML = `<div class="status error">未找到仓库 ${info.owner}/${info.repo}，请检查地址是否正确。</div>`;
+    } else if (e.message === 'RATE_LIMIT') {
+      result.innerHTML = '<div class="status error">触发了 GitHub API 访问频率限制（匿名每小时 60 次）。请稍后再试。</div>';
+    } else {
+      result.innerHTML = `<div class="status error">请求失败：${e.message}</div>`;
+    }
+  }
+  btn.disabled = false;
+}
+
+// 加载下方固定推荐区块
+async function loadFixed(owner, repo, container) {
+  container.innerHTML = '<div class="status loading">正在获取最新版本…</div>';
+  try {
+    const res = await getLatestApk(owner, repo);
+    if (!res) {
+      container.innerHTML = `<div class="status empty">已有 release，但未找到 <code>.apk</code> 文件。<br>
+        <a class="lnk" target="_blank" href="https://github.com/${owner}/${repo}/releases">前往 Releases 手动下载</a></div>`;
+      return;
+    }
+    container.innerHTML = renderDownloadBlock(res.release, res.asset);
+  } catch (e) {
+    let msg = '获取失败：' + e.message;
+    if (e.message === 'NOT_FOUND') msg = '未找到仓库 ' + owner + '/' + repo;
+    if (e.message === 'RATE_LIMIT') msg = '触发 GitHub API 频率限制（匿名每小时 60 次），请稍后再试';
+    container.innerHTML = `<div class="status error">${msg}<br>
+      <a class="lnk" target="_blank" href="https://github.com/${owner}/${repo}/releases">前往 Releases 手动下载</a></div>`;
+  }
+}
+
+// 页面加载时：自动获取默认仓库及下方 Stellar
+fetchLatest();
+loadFixed(STELLAR_OWNER, STELLAR_REPO, stellarResult);
+</script>
+</body>
+</html>
