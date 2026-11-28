@@ -42,8 +42,26 @@
   .apk .tag { display:inline-block; background:#1f6feb33; color:#58a6ff; border:1px solid #1f6feb; border-radius:20px; padding:2px 12px; font-size:13px; margin-bottom:12px; }
   .apk .name { font-size:15px; font-weight:600; word-break:break-all; margin-bottom:4px; }
   .apk .meta { color:#8b949e; font-size:13px; margin-bottom:16px; }
-  .dl { display:block; text-align:center; background:#238636; color:#fff !important; text-decoration:none; padding:12px; border-radius:8px; font-weight:600; }
+
+  .dl-group { display: flex; flex-direction: column; gap: 10px; }
+  .dl {
+    display:block; text-align:center; background:#238636; color:#fff !important;
+    text-decoration:none; padding:12px; border-radius:8px; font-weight:600;
+    border:1px solid transparent; transition: background .15s;
+  }
   .dl:hover { background:#2ea043; }
+  .dl .badge {
+    display:inline-block; font-size:11px; font-weight:600; padding:1px 8px;
+    border-radius:20px; margin-right:8px; vertical-align:1px;
+    background:rgba(255,255,255,.18);
+  }
+  .dl.alt {
+    background:#21262d; color:#e6edf3 !important; border-color:#30363d; font-weight:500;
+  }
+  .dl.alt:hover { background:#30363d; }
+  .dl.alt .badge { background:#30363d; color:#8b949e; }
+
+  .hint { margin-top:10px; font-size:12px; color:#6e7681; text-align:center; }
   .foot { margin-top:20px; font-size:12px; color:#6e7681; text-align:center; }
   a.lnk { color:#58a6ff; text-decoration:none; }
 </style>
@@ -67,6 +85,9 @@
 const result = document.getElementById('result');
 const btn = document.getElementById('btn');
 
+// 主线路加速前缀（拼在原链接前面）
+const PROXY_PREFIX = 'https://gh-proxy.org/';
+
 function parseRepo(input) {
   input = input.trim();
   let m = input.match(/github\.com\/([^\/]+)\/([^\/#?]+)/);
@@ -81,6 +102,11 @@ function fmtSize(b) {
   if (b < 1024) return b + ' B';
   if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
   return (b/1048576).toFixed(1) + ' MB';
+}
+
+function escAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+                  .replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 async function fetchLatest() {
@@ -121,13 +147,28 @@ async function fetchLatest() {
       result.innerHTML = `<div class="status empty">已有 release，但其中未找到 <code>.apk</code> 文件。<br><a class="lnk" target="_blank" href="https://github.com/${info.owner}/${info.repo}/releases">前往仓库查看</a></div>`;
       btn.disabled = false; return;
     }
+
     const date = target.published_at ? target.published_at.slice(0,10) : '';
+    const rawUrl = apk.browser_download_url;              // 备用线路：原始链接
+    const proxyUrl = PROXY_PREFIX + rawUrl;               // 主线路：加速前缀 + 原链接
+    const fileName = escAttr(apk.name);
+
     result.innerHTML = `
       <div class="apk">
         <span class="tag">${target.prerelease ? '预发布 ' : ''}${target.tag_name}</span>
         <div class="name">${apk.name}</div>
         <div class="meta">发布时间 ${date}${apk.size ? ' · 大小 ' + fmtSize(apk.size) : ''}</div>
-        <a class="dl" href="${apk.browser_download_url}" download="${apk.name}">下载 APK</a>
+
+        <div class="dl-group">
+          <a class="dl" href="${escAttr(proxyUrl)}" download="${fileName}">
+            <span class="badge">主线路</span>加速下载 APK
+          </a>
+          <a class="dl alt" href="${escAttr(rawUrl)}" download="${fileName}">
+            <span class="badge">备用</span>原始链接下载
+          </a>
+        </div>
+
+        <div class="hint">主线路走 gh-proxy 加速；若无法下载，请改用备用线路原始链接。</div>
       </div>`;
   } catch (e) {
     result.innerHTML = `<div class="status error">网络请求异常：${e.message}</div>`;
