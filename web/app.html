@@ -38,10 +38,105 @@
   .status.loading { background:#1f2937; color:#8b949e; }
   .status.error { background:#3d1d1d; color:#f85149; border:1px solid #5c2a2a; }
   .status.empty { background:#3a2f1a; color:#d29922; border:1px solid #5c4a1f; }
+
+  /* ===== 其他推荐 区域 ===== */
+  .section-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 700; color: #e6edf3;
+    margin-bottom: 14px;
+  }
+  .section-title::before {
+    content: ''; width: 4px; height: 16px; border-radius: 2px;
+    background: linear-gradient(180deg, #8957e5, #bc8cff);
+    display: inline-block;
+  }
+  .section-title .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, #30363d, transparent);
+  }
+
+  .feature-box {
+    background: linear-gradient(180deg, #1b2233 0%, #12161f 100%);
+    border: 1px solid #8957e5;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 0 0 1px #8957e533, 0 6px 20px rgba(137,87,229,0.15);
+  }
+  .feature-head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 700; margin-bottom: 4px;
+  }
+  .feature-head .moon { color: #bc8cff; }
+  .feature-desc { font-size: 12px; color: #8b949e; margin-bottom: 12px; }
+  .feature-box .apk { background: #0d1117; }
+  .feature-box .status { margin: 0; }
+
   .apk { background:#0d1117; border:1px solid #30363d; border-radius:12px; padding:18px; }
   .apk .tag { display:inline-block; background:#1f6feb33; color:#58a6ff; border:1px solid #1f6feb; border-radius:20px; padding:2px 12px; font-size:13px; margin-bottom:12px; }
-  .apk .name { font-size:15px; font-weight:600; word-break:break-all; margin-bottom:4px; }
+  
+  /* ===== 文件名与说明按钮 ===== */
+  .apk .name-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .apk .name { font-size:15px; font-weight:600; word-break:break-all; flex: 1; }
+  .apk .info-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #1f6feb33; color: #58a6ff; font-size: 14px; font-weight: 700;
+    cursor: pointer; flex-shrink: 0; margin-top: 1px;
+    border: 1px solid #1f6feb; transition: all .15s;
+    user-select: none;
+  }
+  .apk .info-btn:hover { background: #1f6feb; color: #fff; }
+
   .apk .meta { color:#8b949e; font-size:13px; margin-bottom:16px; }
+
+  /* ===== 更新日志及原链接说明面板 ===== */
+  .link-info {
+    display: none;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    animation: fadeIn 0.2s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .info-section { margin-bottom: 12px; }
+  .info-section:last-child { margin-bottom: 0; }
+  .info-label { color: #8b949e; font-size: 12px; margin-bottom: 6px; font-weight: 600; }
+  
+  /* 更新日志样式 */
+  .changelog-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #c9d1d9;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap; /* 保留换行和空格 */
+    word-break: break-word;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  /* 美化滚动条 */
+  .changelog-box::-webkit-scrollbar { width: 6px; }
+  .changelog-box::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+  .link-text {
+    color: #58a6ff; word-break: break-all;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    background: #0d1117; padding: 8px; border-radius: 6px;
+    border: 1px solid #30363d; margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .copy-btn {
+    width: auto; padding: 5px 12px; font-size: 12px; font-weight: 500;
+    background: #21262d; border: 1px solid #30363d; color: #c9d1d9;
+    border-radius: 6px; cursor: pointer; transition: all .15s;
+  }
+  .copy-btn:hover { background: #30363d; }
 
   .dl-group { display: flex; flex-direction: column; gap: 10px; }
   .dl {
@@ -62,6 +157,7 @@
   .dl.alt .badge { background:#30363d; color:#8b949e; }
 
   .hint { margin-top:10px; font-size:12px; color:#6e7681; text-align:center; }
+  .divider { height:1px; background:#30363d; margin: 28px 0; }
   .foot { margin-top:20px; font-size:12px; color:#6e7681; text-align:center; }
   a.lnk { color:#58a6ff; text-decoration:none; }
 </style>
@@ -71,12 +167,22 @@
     <h1>APK 最新版本下载器</h1>
     <p class="sub">通过 GitHub API 自动获取指定仓库最新 release 中的 APK</p>
 
+    <!-- 原有主查询区 -->
     <label for="repo">GitHub 仓库地址</label>
     <input id="repo" type="text" value="https://github.com/SushiSos/803ets">
-
     <button id="btn" onclick="fetchLatest()">获取最新版本</button>
-
     <div class="result" id="result"></div>
+
+    <div class="divider"></div>
+
+    <!-- 其他推荐：仅包含 Stellar -->
+    <div class="section-title">其他推荐<span class="line"></span></div>
+
+    <div class="feature-box">
+      <div class="feature-head"><span class="moon">☾</span> Stellar（Shizuku 魔改）最新版</div>
+      <div class="feature-desc">来自 GitHub 仓库 roro2239/Stellar</div>
+      <div id="stellarResult"></div>
+    </div>
 
     <p class="foot">数据直接来自 GitHub REST API · 支持任意公开仓库</p>
   </div>
@@ -84,9 +190,14 @@
 <script>
 const result = document.getElementById('result');
 const btn = document.getElementById('btn');
+const stellarResult = document.getElementById('stellarResult');
 
 // 主线路加速前缀（拼在原链接前面）
 const PROXY_PREFIX = 'https://gh-proxy.org/';
+
+// 固定的 Stellar 仓库信息
+const STELLAR_OWNER = 'roro2239';
+const STELLAR_REPO  = 'Stellar';
 
 function parseRepo(input) {
   input = input.trim();
@@ -108,75 +219,57 @@ function escAttr(s) {
   return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
                   .replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
-
-async function fetchLatest() {
-  result.innerHTML = '<div class="status loading">正在从 GitHub 获取 release 信息…</div>';
-  btn.disabled = true;
-  const info = parseRepo(document.getElementById('repo').value);
-  if (!info) {
-    result.innerHTML = '<div class="status error">仓库地址格式无法识别，请使用形如 github.com/owner/repo 的地址。</div>';
-    btn.disabled = false; return;
-  }
-  try {
-    const url = `https://api.github.com/repos/${info.owner}/${info.repo}/releases`;
-    const resp = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
-    if (resp.status === 404) {
-      result.innerHTML = `<div class="status error">未找到仓库 ${info.owner}/${info.repo}，请检查地址是否正确。</div>`;
-      btn.disabled = false; return;
-    }
-    if (resp.status === 403) {
-      result.innerHTML = '<div class="status error">触发了 GitHub API 访问频率限制（匿名每小时 60 次）。请稍后再试。</div>';
-      btn.disabled = false; return;
-    }
-    if (!resp.ok) {
-      result.innerHTML = `<div class="status error">请求失败，HTTP ${resp.status}</div>`;
-      btn.disabled = false; return;
-    }
-    const releases = await resp.json();
-    if (!Array.isArray(releases) || releases.length === 0) {
-      result.innerHTML = `<div class="status empty">该仓库目前<b>尚未发布任何 release</b>，暂无 APK 可供下载。<br><a class="lnk" target="_blank" href="https://github.com/${info.owner}/${info.repo}/releases">前往仓库查看</a></div>`;
-      btn.disabled = false; return;
-    }
-    let target = null, apk = null;
-    const sorted = releases.filter(r => !r.draft);
-    for (const r of sorted) {
-      const a = (r.assets || []).find(x => /\.apk$/i.test(x.name));
-      if (a) { target = r; apk = a; break; }
-    }
-    if (!target) {
-      result.innerHTML = `<div class="status empty">已有 release，但其中未找到 <code>.apk</code> 文件。<br><a class="lnk" target="_blank" href="https://github.com/${info.owner}/${info.repo}/releases">前往仓库查看</a></div>`;
-      btn.disabled = false; return;
-    }
-
-    const date = target.published_at ? target.published_at.slice(0,10) : '';
-    const rawUrl = apk.browser_download_url;              // 备用线路：原始链接
-    const proxyUrl = PROXY_PREFIX + rawUrl;               // 主线路：加速前缀 + 原链接
-    const fileName = escAttr(apk.name);
-
-    result.innerHTML = `
-      <div class="apk">
-        <span class="tag">${target.prerelease ? '预发布 ' : ''}${target.tag_name}</span>
-        <div class="name">${apk.name}</div>
-        <div class="meta">发布时间 ${date}${apk.size ? ' · 大小 ' + fmtSize(apk.size) : ''}</div>
-
-        <div class="dl-group">
-          <a class="dl" href="${escAttr(proxyUrl)}" download="${fileName}">
-            <span class="badge">主线路</span>加速下载 APK
-          </a>
-          <a class="dl alt" href="${escAttr(rawUrl)}" download="${fileName}">
-            <span class="badge">备用</span>原始链接下载
-          </a>
-        </div>
-
-        <div class="hint">主线路走 gh-proxy 加速；若无法下载，请改用备用线路原始链接。</div>
-      </div>`;
-  } catch (e) {
-    result.innerHTML = `<div class="status error">网络请求异常：${e.message}</div>`;
-  }
-  btn.disabled = false;
+function escHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-fetchLatest();
-</script>
-</body>
-</html>
+// 通用：获取某仓库最新 release 中的 APK 资源
+async function getLatestApk(owner, repo) {
+  const resp = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/releases`,
+    { headers: { 'Accept': 'application/vnd.github+json' } }
+  );
+  if (resp.status === 404) throw new Error('NOT_FOUND');
+  if (resp.status === 403) throw new Error('RATE_LIMIT');
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+  const releases = await resp.json();
+  if (!Array.isArray(releases)) throw new Error('BAD_DATA');
+
+  const sorted = releases.filter(r => !r.draft);
+  for (const r of sorted) {
+    const a = (r.assets || []).find(x => /\.apk$/i.test(x.name));
+    if (a) return { release: r, asset: a };
+  }
+  return null;
+}
+
+// 渲染“主线路 + 备用线路”下载块
+function renderDownloadBlock(release, asset) {
+  const rawUrl = asset.browser_download_url;          // 备用：原始链接
+  const proxyUrl = PROXY_PREFIX + rawUrl;             // 主线路：加速前缀 + 原链接
+  const fileName = escAttr(asset.name);
+  const date = release.published_at ? release.published_at.slice(0, 10) : '';
+  const meta = `发布时间 ${date}${asset.size ? ' · 大小 ' + fmtSize(asset.size) : ''}`;
+  
+  // 获取更新日志内容 (如果为空显示默认提示)
+  const notes = release.body && release.body.trim() 
+    ? escHtml(release.body.trim()) 
+    : '该版本未提供具体的更新日志。';
+
+  return `
+    <div class="apk">
+      <span class="tag">${release.prerelease ? '预发布 ' : ''}${escHtml(release.tag_name)}</span>
+      
+      <div class="name-row">
+        <div class="name">${escHtml(asset.name)}</div>
+        <div class="info-btn" onclick="toggleInfo(this)" title="查看更新日志与原链接">ℹ</div>
+      </div>
+      
+      <div class="meta">${meta}</div>
+      
+      <!-- 说明面板 (默认隐藏) -->
+      <div class="link-info">
+        
+        <div class="info-sectio
